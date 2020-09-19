@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<job minFilesPerProcess="1" maxFilesPerProcess="1"  simulateSubmission="false">
+
+ <SandBox installer="ZIP">
+	<Package name="LocalPackage">
+	  <File>file:/global/homes/x/xiao00/pwg_disk/AuAu14/PicoReader/StRoot</File>
+	  <File>file:/global/homes/x/xiao00/pwg_disk/AuAu14/PicoReader/.sl64_gcc447</File>
+	  <File>file:/global/homes/x/xiao00/pwg_disk/AuAu14/PicoReader/.sl64_gcc482</File>
+	  <File>file:/global/homes/x/xiao00/pwg_disk/AuAu14/PicoReader/runNumberList_run14AuAu200mb</File>
+	  <File>file:/global/homes/x/xiao00/pwg_disk/AuAu14/PicoReader/recenter_correction.root</File>
+	  <File>file:/global/homes/x/xiao00/pwg_disk/AuAu14/PicoReader/runNumberList_run14AuAu200ht_high</File>
+	  <File>file:/global/homes/x/xiao00/pwg_disk/AuAu14/PicoReader/recenter_correction_ht_high.root</File>
+   </Package>
+</SandBox>
+
+<!--
+<SandBox installer="ZIP">
+	<Package name="LocalPackage" installdir="&path;/submit/&ver;">
+		<File>file:&path;/makeAnaTree.C</File>
+		<File>file:&path;/StRoot</File>
+		<File>file:&path;/.sl64_gcc447</File>
+		<File>file:&path;/.sl64_gcc482</File>
+		<File>file:&path;/runNumberList_run14AuAu200mb</File>
+		<File>file:&path;/recenter_correction.root</File>
+   </Package>
+</SandBox>
+-->
+
+<!--root4star -q -b -l StRoot/macros/makeAnaTreeFromPicoDst.C\(100000000,${RUN},\"$INPUTFILE0\"\,false,&mode;\,1\,&ptype;\) &gt;&amp; ${JOBID}_$filename.log-->               
+<command>
+starver SL16d
+root4star -l -b &lt;&lt;EOF
+.L StRoot/macros/makeAnaTreeFromPicoDst.C
+makeAnaTreeFromPicoDst(100000000,&run;,"$FILELIST","st_$JOBID._Purity",false,&mode;,1,&ptype;)
+.q
+EOF
+</command>
+
+    <stderr URL="file:&path;/log/log_&ver;/&run;/$JOBID.err" />
+    <stdout URL="file:&path;/log/log_&ver;/&run;/$JOBID.out" />
+    <!--<input URL="catalog:star.bnl.gov?production=P15ic,collision=auau200,runnumber=&run;,trgsetupname=AuAu_200_production_2014||AuAu_200_production_mid_2014||AuAu_200_production_low_2014||AuAu_200_production_high_2014,filename~st_physics,filetype=daq_reco_Mudst,storage=local" nFiles="all"/>-->
+    <input URL="filelist:&listOfFiles;" />
+    <!--output fromScratch="*.log" toURL="&path;/log/log_&ver;/&run;/"/>-->
+    <!--output fromScratch="*anaTree.root" toURL="&path;/out/out_&ver;/&run;/" />-->
+    <!--output fromScratch="*qa.root" toURL="&path;/out/out_&ver;/&run;/" />-->
+    <output fromScratch="*purity.root" toURL="&path;/out/out_&ver;/&run;/" />
+    <!--<output fromScratch="*hist.root" toURL="&path;/out/out_&ver;/&run;/" />-->
+</job>
