@@ -1684,14 +1684,14 @@ Int_t drawDay(Int_t runStartT, Int_t runStopT, TString runlist,Int_t binLow, Int
       
     }
     else{
-      lineGlobal->SetX1(0.1+0.69*newDay.at(l)/nCount);
-      lineGlobal->SetX2(0.1+0.69*newDay.at(l)/nCount);
+      lineGlobal->SetX1(0.1+0.8*newDay.at(l)/nCount);
+      lineGlobal->SetX2(0.1+0.8*newDay.at(l)/nCount);
       lineGlobal->SetY1(0.1); //0.026
       lineGlobal->SetY2(0.9); //0.947
       lineGlobal->SetLineColor(kRed);
       linesGlobal.push_back(lineGlobal);
       
-      textGlobal->SetX(0.1+0.69*newDay.at(l)/nCount);
+      textGlobal->SetX(0.1+0.8*newDay.at(l)/nCount);
       textGlobal->SetY(0.92);
       textGlobal->SetTextAngle(90.);
       textGlobal->SetTextSize(0.02);
