@@ -1,1 +1,0 @@
-../../../../StRoot/StPicoDstarMixedEvent/StPicoDstarMixedMaker.h
