@@ -9,7 +9,6 @@ const Double_t mVzDiffCut= 3.;
 const Double_t epsilon = 1.e-10;
 
 Bool_t dumpEmptyHT2Runs = kFALSE;
-Bool_t setProfileRange  = kTRUE;
 Bool_t detailBadRunInfo = kTRUE;
 
 typedef map<Int_t, Int_t> IntMap;
@@ -54,7 +53,7 @@ Int_t drawDay(Int_t runStartT, Int_t runStopT, TString runlistT,Int_t binLow, In
 void pdfAction(TCanvas *c, TPDF *ps);
 
 TH1D *hnEvtsvsRun;
-void plotQA(Int_t runStartT=21226023, Int_t runStopT=21232025, TString runlist="0827_production_26p5_2020_runnumber_DD.dat"){
+void plotQA(Int_t runStartT=21226023, Int_t runStopT=21232025, TString runlist="0827_production_26p5_2020_runnumber_DD.dat", Bool_t setProfileRange  = kTRUE, Bool_t setFXT=kFALSE){
   
   runStart[0] = runStartT;
   runStop[0] = runStopT;
@@ -781,6 +780,7 @@ void plotQA(Int_t runStartT=21226023, Int_t runStopT=21232025, TString runlist="
   c1->cd();
   setProfile(hTpcVxvsRun, MStyle, MSize, MColor, MColor);
   if(setProfileRange) hTpcVxvsRun->SetAxisRange(-0.6, 0.6, "Y");
+  if(setFXT) hTpcVxvsRun->SetAxisRange(-0.6, 0., "Y");
   hTpcVxvsRun->Draw("p");
   for(Int_t i=0; i<nTrgIds; i++){
     addShade(hTpcVxvsRun, binLow[i], binHi[i], i);
@@ -797,6 +797,7 @@ void plotQA(Int_t runStartT=21226023, Int_t runStopT=21232025, TString runlist="
   c1->cd();
   setProfile(hTpcVyvsRun, MStyle, MSize, MColor, MColor);
   if(setProfileRange) hTpcVyvsRun->SetAxisRange(-0.8, 0.8, "Y");
+  if(setFXT) hTpcVyvsRun->SetAxisRange(-3., 0., "Y");
   hTpcVyvsRun->Draw("p");
   for(Int_t i=0; i<nTrgIds; i++){
     addShade(hTpcVyvsRun, binLow[i], binHi[i], i);
@@ -813,6 +814,7 @@ void plotQA(Int_t runStartT=21226023, Int_t runStopT=21232025, TString runlist="
   c1->cd();
   setProfile(hTpcVzvsRun, MStyle, MSize, MColor, MColor);
   if(setProfileRange) hTpcVzvsRun->SetAxisRange(-100, 100, "Y");
+  if(setFXT) hTpcVzvsRun->SetAxisRange(0., 300., "Y");
   hTpcVzvsRun->Draw("p");
   for(Int_t i=0; i<nTrgIds; i++){
     addShade(hTpcVzvsRun, binLow[i], binHi[i], i);
@@ -909,6 +911,7 @@ void plotQA(Int_t runStartT=21226023, Int_t runStopT=21232025, TString runlist="
   c1->cd();
   setProfile(hEtavsRun, MStyle, MSize, MColor, MColor);
   if(setProfileRange) hEtavsRun->SetAxisRange(-0.4, 0.4, "Y");
+  if(setFXT)hEtavsRun->SetAxisRange(-2., 0., "Y");
   hEtavsRun->Draw("p");
   for(Int_t i=0; i<nTrgIds; i++){
     addShade(hEtavsRun, binLow[i], binHi[i], i);
@@ -988,7 +991,7 @@ void plotQA(Int_t runStartT=21226023, Int_t runStopT=21232025, TString runlist="
   
   c1->cd();
   setProfile(hNHitsDedxvsRun, MStyle, MSize, MColor, MColor);
-  if(setProfileRange) hNHitsDedxvsRun->SetAxisRange(40, 70, "Y");
+  if(setProfileRange) hNHitsDedxvsRun->SetAxisRange(35, 70, "Y");
   hNHitsDedxvsRun->Draw("p");
   for(Int_t i=0; i<nTrgIds; i++){
     addShade(hNHitsDedxvsRun, binLow[i], binHi[i], i);
@@ -1651,17 +1654,11 @@ Int_t drawDay(Int_t runStartT, Int_t runStopT, TString runlist,Int_t binLow, Int
     dayPrev = dayI;
   }
   int nRuns = runCount.size();
-  TText *dayText = new TText(0.01,0.93,"Day");
+  TText *dayText = new TText(0.01,0.9,"Day");
   dayText->SetNDC();
   dayText->SetX(0.03);
   dayText->SetY(0.97);
   dayText->SetTextSize(0.025);
-  TText *globalTitle = new TText(0.93,0.4,"Global Tracks");
-  globalTitle->SetNDC();
-  globalTitle->SetX(0.96);
-  globalTitle->SetY(0.35);
-  globalTitle->SetTextAngle(90.);
-  globalTitle->SetTextSize(0.05);
   
   // draw all day line
   for (int l=0; l<newDay.size(); l++){
@@ -1679,24 +1676,23 @@ Int_t drawDay(Int_t runStartT, Int_t runStopT, TString runlist,Int_t binLow, Int
       linesGlobal.push_back(lineGlobal);
       
       textGlobal->SetText(0.1,0.91,dayStart);
-      textGlobal->SetX(0.09);
-      textGlobal->SetY(0.93);
+      textGlobal->SetX(0.1);
+      textGlobal->SetY(0.92);
       textGlobal->SetTextAngle(90.);
       textGlobal->SetTextSize(0.02);
       textsGlobal.push_back(textGlobal);
       
     }
     else{
-      
-      lineGlobal->SetX1(0.09+0.71*newDay.at(l)/nCount);
-      lineGlobal->SetX2(0.09+0.71*newDay.at(l)/nCount);
+      lineGlobal->SetX1(0.1+0.69*newDay.at(l)/nCount);
+      lineGlobal->SetX2(0.1+0.69*newDay.at(l)/nCount);
       lineGlobal->SetY1(0.1); //0.026
       lineGlobal->SetY2(0.9); //0.947
       lineGlobal->SetLineColor(kRed);
       linesGlobal.push_back(lineGlobal);
       
-      textGlobal->SetX(0.09+0.81*newDay.at(l)/nCount);
-      textGlobal->SetY(0.93);
+      textGlobal->SetX(0.1+0.69*newDay.at(l)/nCount);
+      textGlobal->SetY(0.92);
       textGlobal->SetTextAngle(90.);
       textGlobal->SetTextSize(0.02);
       textsGlobal.push_back(textGlobal);
